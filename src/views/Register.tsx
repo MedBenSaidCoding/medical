@@ -129,7 +129,7 @@ const Register = ({ mode }: { mode: SystemMode }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
         email: data.email,
         password: data.password,
         name: data.name
@@ -139,7 +139,7 @@ const Register = ({ mode }: { mode: SystemMode }) => {
 
       router.push(getLocalizedUrl(redirectURL, locale as Locale))
     } catch (error) {
-      console.error('error occurred while registering', error)
+
       setErrorState({ message: ['error occurred while registering'] })
     }
   }

@@ -12,7 +12,6 @@ export async function POST(req: Request) {
   const { email, password } = await req.json()
   const user = await db.user.signIn({ email: email, password: password })
 
-  console.log('from login api',user)
   let response: null | ResponseUser = null
 
   if (user) {
@@ -23,10 +22,9 @@ export async function POST(req: Request) {
       ...filteredUserData
     }
 
-    console.log(response);
     return NextResponse.json(response)
   } else {
-    console.log('from login api 401')
+
     // We return 401 status code and error message if user is not found
     return NextResponse.json(
       {

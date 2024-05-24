@@ -1,8 +1,7 @@
-import { SignInRequestType, SignUpRequestType } from '@/types/models/UsersTypes'
 import { PrismaClient } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth'
+
+import type { SignInRequestType, SignUpRequestType } from '@/types/models/UsersTypes'
 
 const prismaClientSingleton = () => {
   const prisma = new PrismaClient().$extends({
@@ -24,22 +23,22 @@ const prismaClientSingleton = () => {
 
           const searchedUser = await prisma.user.findUnique({
             where: {
-              email: request.email,
+              email: request.email
             }
           })
 
           if (!searchedUser) {
             return null
           }
+
           const match = await compare(request.password, searchedUser?.hashedPassword as string)
-          if(!match)
-          {
+
+          if (!match) {
             return null
           }
 
           return searchedUser
-        },
-
+        }
       }
     }
   })
@@ -48,8 +47,8 @@ const prismaClientSingleton = () => {
 }
 
 declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>
+} & typeof global
 
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 

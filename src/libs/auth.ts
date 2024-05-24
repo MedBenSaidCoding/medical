@@ -132,7 +132,7 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user }) {
-      console.log('signIn event')
+      console.log('signIn event', user)
     },
     async createUser(message) {
       console.log('User created!', { message })
