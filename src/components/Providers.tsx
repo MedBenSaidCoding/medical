@@ -18,6 +18,7 @@ import AppReactToastify from '@/libs/styles/AppReactToastify'
 // Util Imports
 import { getDemoName, getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
 import { authOptions } from '@/libs/auth'
+import { ReactQueryClientProvider } from './ReactQueryClientProvider'
 
 type Props = ChildrenType & {
   direction: Direction
@@ -37,14 +38,16 @@ const Providers = async (props: Props) => {
 
   return (
     <NextAuthProvider basePath={process.env.NEXTAUTH_BASEPATH} session={session}>
-      <VerticalNavProvider>
-        <SettingsProvider settingsCookie={settingsCookie} mode={mode} demoName={demoName}>
-          <ThemeProvider direction={direction} systemMode={systemMode}>
-            {children}
-            <AppReactToastify position={themeConfig.toastPosition} hideProgressBar />
-          </ThemeProvider>
-        </SettingsProvider>
-      </VerticalNavProvider>
+      <ReactQueryClientProvider>
+        <VerticalNavProvider>
+          <SettingsProvider settingsCookie={settingsCookie} mode={mode} demoName={demoName}>
+            <ThemeProvider direction={direction} systemMode={systemMode}>
+              {children}
+              <AppReactToastify position={themeConfig.toastPosition} hideProgressBar />
+            </ThemeProvider>
+          </SettingsProvider>
+        </VerticalNavProvider>
+      </ReactQueryClientProvider>
     </NextAuthProvider>
   )
 }

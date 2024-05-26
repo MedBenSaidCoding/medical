@@ -1,22 +1,27 @@
 // Component Imports
-import UserList from '@views/apps/user/list'
+import { cookies } from 'next/headers'
 
-const getData = async () => {
-  // Vars
-  const res = await fetch(`${process.env.API_URL}/apps/user-list`)
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch userData')
-  }
+import { prefetchQuery } from '@supabase-cache-helpers/postgrest-react-query'
 
-  return res.json()
+import useSupabaseServer from '@/utils/supabase/supabase-server'
+
+import PatientList from '@views/apps/patient/list'
+import { getAllPatients } from '@/data/queries/patientQueries'
+
+const PatientListApp = async () => {
+  const queryClient = new QueryClient()
+  const cookieStore = cookies()
+  const supabase = useSupabaseServer(cookieStore)
+
+  await prefetchQuery(queryClient, getAllPatients(supabase))
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PatientList />
+    </HydrationBoundary>
+  )
 }
 
-const UserListApp = async () => {
-  // Vars
-  const data = await getData()
-
-  return <UserList userData={data} />
-}
-
-export default UserListApp
+export default PatientListApp
